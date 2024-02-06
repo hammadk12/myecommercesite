@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router(); // Creates a new router instance for handling routes under a specifc path
-
+const productController = require('../controllers/productController');
+const authMiddleware = require('../middleware/authMiddleware')
 // First argument in each route method is the path, the second is the controller function to handle the request
 // Importing the product controller
-const productController = require('../controllers/productController');
 
 // GET request to list all products
 router.get('/', productController.getAllProducts);
 
 // POST request to add a new product
-router.post('/', productController.addProduct);
+router.post('/', authMiddleware, productController.addProduct);
 
 // GET request to get a single product by ID
-router.get('/:productID', productController.getProductById);
+router.get('/:productId', productController.getProductById);
 
 // PUT request to update a product by ID
-router.put('/:productId', productController.updateProduct);
+router.put('/:productId', authMiddleware, productController.updateProduct);
 
 // DELETE request to delete a product by ID
-router.delete('/:productId', productController.deleteProduct);
+router.delete('/:productId', authMiddleware, productController.deleteProduct);
 
 module.exports = router;
 
