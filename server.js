@@ -1,9 +1,12 @@
+const connectDB = require("./database");
 const express = require('express');
 const app = express();
 const port = 3000;
 
+connectDB();
+
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Hello bitch!');
 });
 
 app.listen(port, () => {
