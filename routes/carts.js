@@ -4,15 +4,16 @@ const cartController = require('../controllers/cartController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 // Add item to cart
-router.post('/add', authMiddleware, cartController.addItem);
+router.post('/add', authMiddleware, cartController.addToCart);
 
 // Get cart items
 router.get('/', authMiddleware, cartController.getCart);
 
 // Update item quantity in cart
-router.put('/update/:itemId', authMiddleware, cartController.updateItem);
+router.put('/update/:itemId', authMiddleware, cartController.updateCartItem);
 
 // Remove item from cart
-router.delete('/remove/:itemId', authMiddleware, cartController.removeItem);
+router.delete('/remove/:itemId', authMiddleware, cartController.removeCartItem);
+
 
 module.exports = router;

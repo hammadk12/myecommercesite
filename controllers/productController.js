@@ -1,22 +1,29 @@
-const Product = require('../models/Product');
+const Product = require('../models/product');
 
-// Create a new product
+// Create a new product with input validation
 exports.createProduct = async (req, res) => {
     try {
-        const newProduct = new Product(req.body); // Creates a new instance of the Product model using the data provided in the request body
-        await newProduct.save(); // saves the new product to db
+        const { name, description, price, inStock } = req.body;
+        if (!name || !description || price === undefined) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        const newProduct = new Product(req.body);
+        await newProduct.save();
         res.status(201).json(newProduct);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error("Error:", error.message);
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Get all products, fetching all products from database
+// Get all products
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find(); // fetches all products from db
+        const products = await Product.find();
         res.status(200).json(products);
     } catch (error) {
+        console.error("Error:", error.message);
         res.status(500).json({ message: error.message });
     }
 };
@@ -24,37 +31,46 @@ exports.getAllProducts = async (req, res) => {
 // Get a single product by ID
 exports.getProductById = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.productId); // uses findById to fetch a product by the ID provided in the req.params
-        if (!product) { // if block to catch errors if product not found
-            return res.status(404).json({ message: 'Product not found. '});
+        const product = await Product.findById(req.params.productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
         }
         res.status(200).json(product);
     } catch (error) {
+        console.error("Error:", error.message);
         res.status(500).json({ message: error.message });
     }
 };
 
-// Update a product
+// Update a product with input validation
 exports.updateProduct = async (req, res) => {
     try {
-        const updateProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, { new: true }); // Updates product using findbyidandupdate, updates data and an option that returns the updated document
-        if (!updateProduct) {
-            return res.status(404).json({ message: 'Product not found '});
+        const { name, description, price, inStock } = req.body;
+        if (!name && !description && price === undefined && inStock === undefined) {
+            return res.status(400).json({ message: "No fields to update" });
+        }
+
+        const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, { new: true });
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
         }
         res.status(200).json(updatedProduct);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error("Error:", error.message);
+        res.status(500).json({ message: error.message });
     }
 };
 
+// Delete a product
 exports.deleteProduct = async (req, res) => {
     try {
-        const product = await Product.findByIdAndDelete(req.params.productId); // deletes product using ID
+        const product = await Product.findByIdAndDelete(req.params.productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        res.status(200).json({ message: 'Product deleted successfully '});
+        res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
+        console.error("Error:", error.message);
         res.status(500).json({ message: error.message });
     }
 };
