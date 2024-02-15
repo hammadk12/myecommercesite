@@ -34,7 +34,7 @@ const cartSchema = new mongoose.Schema({
         default: Date.now
     },
     updatedAt: {
-        type: Data,
+        type: Date,
         default: Date.now
     }
 });
