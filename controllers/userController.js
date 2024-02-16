@@ -46,7 +46,7 @@ exports.loginUser = async (req, res) => {
 // Get User Profile
 exports.getUserProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select('-password');
+        const user = await User.findById(req.userData.id).select('-password'); // Changed from req.userId to req.userData.id
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -61,8 +61,18 @@ exports.updateUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const updates = {};
+
+        // Check if the email is being updated and if it's already in use
+        if (email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser && existingUser._id.toString() !== req.userData.id) {
+                return res.status(400).json({ message: 'Email is already in use' });
+            }
+            updates.email = email;
+        }
+
         if (name) updates.name = name;
-        if (email) updates.email = email;
+        
         if (password) {
             if (password.length < 6) {
                 return res.status(400).json({ message: 'Password should be at least 6 characters long' });
@@ -70,7 +80,7 @@ exports.updateUser = async (req, res) => {
             updates.password = await bcrypt.hash(password, 12);
         }
 
-        const user = await User.findByIdAndUpdate(req.userId, updates, { new: true }).select('-password');
+        const user = await User.findByIdAndUpdate(req.userData.id, updates, { new: true }).select('-password');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -79,3 +89,4 @@ exports.updateUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
