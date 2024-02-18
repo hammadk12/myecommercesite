@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cartController');
 const authMiddleware = require('../middleware/authMiddleware');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 // Add item to cart
 router.post('/add', authMiddleware, cartController.addToCart);
@@ -17,3 +18,4 @@ router.delete('/remove/:itemId', authMiddleware, cartController.removeCartItem);
 
 
 module.exports = router;
+

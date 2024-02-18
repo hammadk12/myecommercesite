@@ -1,0 +1,28 @@
+API Documentation for My E-commerce Application
+
+Introduction
+Welcome to the API documentation for My E-commerce Application. This API facilitates interactions with a variety of e-commerce functionalities, including managing products, user accounts, shopping carts, orders, and product reviews. It's designed to offer a robust and flexible interface for building a comprehensive e-commerce frontend.
+
+Authentication
+Our API uses JWT (JSON Web Tokens) for secure access. To authenticate:
+
+Login: Send a POST request to the /user/login endpoint with user credentials. On successful authentication, a JWT token is returned.
+
+Using the Token: For endpoints that require authentication, include this token in the Authorization header as Bearer <your_token>.
+
+Endpoints Overview
+The API is categorized into several sections, each handling a specific aspect of e-commerce operations:
+
+User Management (/user): Handles user registration, login, and profile management. Use these endpoints to create new user accounts, log in users, and retrieve or update user profile information.
+
+Product Management (/products): Interact with our product catalog. This includes retrieving the list of products, adding new products, and updating or deleting existing products.
+
+Cart Operations (/cart): Manages shopping cart functionalities. Users can add items to their cart, update item quantities, view cart contents, and remove items.
+
+Order Processing (/orders): Facilitates order creation and management. Users can place new orders, view their order history, and get details of specific orders.
+
+Product Reviews (/reviews): Provides the ability to add reviews to products, retrieve reviews for a product, and delete reviews.
+
+
+
+
