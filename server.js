@@ -42,11 +42,13 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/orders');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/user');
+const contactRoutes = require('./routes/contact');
 
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/reviews', reviewRoutes);
 app.use('/user', userRoutes);
+app.use('/contact', contactRoutes);
 
 // Root Route
 app.get('/', (req, res) => {

@@ -1,3 +1,14 @@
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: Get a list of all products
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: A list of products
+ */
+
 const express = require('express');
 const router = express.Router(); // Creates a new router instance for handling routes under a specifc path
 const productController = require('../controllers/productController');

@@ -1,3 +1,30 @@
+/**
+ * @swagger
+ * /cart/add:
+ *   post:
+ *     summary: Add an item to the cart
+ *     tags: [Cart]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *             required:
+ *               - productId
+ *               - quantity
+ *     responses:
+ *       201:
+ *         description: Item added to cart
+ *       400:
+ *         description: Bad request
+ */
+
 const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cartController');

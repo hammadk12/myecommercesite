@@ -1,3 +1,29 @@
+/**
+ * @swagger
+ * /orders:
+ *   post:
+ *     summary: Place a new order
+ *     tags: [Orders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               items:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *             required:
+ *               - items
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ *       400:
+ *         description: Bad request
+ */
+
 const express = require('express');
 const router = express.Router();
 const ordersController = require('../controllers/ordersController');
