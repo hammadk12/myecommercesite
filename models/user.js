@@ -9,13 +9,16 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+    lowercase: true,
+    trim: true
   },
   password: {
     type: String,
     required: true
   },
-  // Additional fields like address, phone number, etc., can be added here
+  
 });
 
 // Pre-save middleware to hash the password
@@ -24,5 +27,10 @@ userSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
+
+// Password comparison method
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 module.exports = mongoose.model('User', userSchema);
