@@ -1,6 +1,12 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
+
+// Helper function to generate JWT
+const generateToken = (userId) => {
+    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
+};
 
 // Register User
 exports.registerUser = async (req, res) => {
@@ -10,8 +16,12 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: 'Please provide name, email, and password' });
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({ message: 'Password should be at least 6 characters long' });
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        if (!validator.isStrongPassword(password, { minLength: 8, minNumbers: 1, minSymbols: 1 })) {
+            return res.status(400).json({ message: 'Password is not strong enough' });
         }
 
         const existingUser = await User.findOne({ email });
@@ -21,7 +31,9 @@ exports.registerUser = async (req, res) => {
 
         const user = new User({ name, email, password });
         await user.save();
-        res.status(201).json({ message: 'User registered successfully' });
+
+        const token = generateToken(user._id);
+        res.status(201).json({ message: 'User registered successfully', token });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -36,7 +48,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = generateToken(user._id);
         res.json({ token });
     } catch (error) {
         res.status(500).json({ message: error.message });
