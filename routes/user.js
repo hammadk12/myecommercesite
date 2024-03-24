@@ -25,20 +25,39 @@
  */
 
 const express = require('express');
-const router = express.Router();
+const rateLimit = require('express-rate-limit');
+const { body } = require('express-validator')
 const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { registerValidation, loginValidation } = require('../validations');
+const helmet = require('helmet');
+const cors = require('cors');
+
+const router = express.Router();
+
+// Apply helmet for secure HTTP headers
+router.use(helmet());
+
+// Enable CORS for your routes
+router.use(cors());
+
+// Rate limiting for register and login routes
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login requests per windowMs
+    message: 'Too many login attempts, please try again later.'
+});
 
 // Register a new user
-router.post('/register', userController.registerUser);
+router.post('/register', registerValidation, userController.registerUser);
 
 // User login
-router.post('/login', userController.loginUser);
+router.post('/login', loginLimiter, loginValidation, userController.loginUser);
 
 // Get user profile
 router.get('/profile', authMiddleware, userController.getUserProfile);
 
 // Update user profile
-router.put('/update', authMiddleware, userController.updateUser);
+router.put('/update', authMiddleware, registerValidation, userController.updateUser);
 
 module.exports = router;
