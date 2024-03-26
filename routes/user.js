@@ -29,7 +29,7 @@ const rateLimit = require('express-rate-limit');
 const { body } = require('express-validator')
 const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
-const { registerValidation, loginValidation } = require('../validations');
+const { registerValidation, loginValidation } = require('../validations/validations');
 const helmet = require('helmet');
 const cors = require('cors');
 

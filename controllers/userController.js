@@ -10,15 +10,16 @@ const generateToken = (userId) => {
 
 // Register User
 exports.registerUser = async (req, res) => {
+    console.log(req.body)
     try {
-        const { name, email, password } = req.body;
+        const { username, email, password } = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).json({ message: 'Email is already in use' });
         }
 
-        const user = new User({ name, email, password });
+        const user = new User({ username, email, password });
         await user.save();
 
         const token = generateToken(user._id);
