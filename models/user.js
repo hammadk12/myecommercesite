@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
-    required: true
+    required: [true, "Please provide a username."],
+    unique: true,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Please provide an emal."],
     unique: true,
     match: [/.+\@.+\..+/, 'Please fill a valid email address'],
     lowercase: true,
@@ -16,9 +17,20 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: [true, "Please provide a password."],
   },
-  
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  forgotPasswordToken: String,
+  forgotPasswordTokenExpiry: Date,
+  verifyToken: String,
+  verifyTokenExpiry: Date,
 });
 
 // Pre-save middleware to hash the password
