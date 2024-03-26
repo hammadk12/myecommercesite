@@ -41,15 +41,18 @@ router.use(helmet());
 // Enable CORS for your routes
 router.use(cors());
 
-// Rate limiting for register and login routes
+// Rate limiting for login routes
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 5, // Limit each IP to 5 login requests per windowMs
     message: 'Too many login attempts, please try again later.'
 });
 
-// Register a new user
-router.post('/register', registerValidation, userController.registerUser);
+const registerLimiter = rateLimit({
+    windowMs: 60 * 60 * 100, // 1 hour window
+    max: 5, // star blocking after 5 requests
+    message: "Too many accounts created from this IP, please try again in an hour."
+})
 
 // User login
 router.post('/login', loginLimiter, loginValidation, userController.loginUser);
@@ -59,5 +62,8 @@ router.get('/profile', authMiddleware, userController.getUserProfile);
 
 // Update user profile
 router.put('/update', authMiddleware, registerValidation, userController.updateUser);
+
+// Register a new user
+router.post('/register', registerLimiter, registerValidation, userController.registerUser)
 
 module.exports = router;

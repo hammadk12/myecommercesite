@@ -12,21 +12,10 @@ const generateToken = (userId) => {
 exports.registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: 'Please provide name, email, and password' });
-        }
-
-        if (!validator.isEmail(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
-        }
-
-        if (!validator.isStrongPassword(password, { minLength: 8, minNumbers: 1, minSymbols: 1 })) {
-            return res.status(400).json({ message: 'Password is not strong enough' });
-        }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'Email is already in use' });
+            return res.status(409).json({ message: 'Email is already in use' });
         }
 
         const user = new User({ name, email, password });
