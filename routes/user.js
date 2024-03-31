@@ -69,4 +69,7 @@ router.post('/register', registerLimiter, registerValidation, userController.reg
 // Logout user
 router.post('/logout', authMiddleware, userController.logoutUser);
 
+// Delete user account 
+router.delete('/delete/:userId', authMiddleware, userController.deleteUser);
+
 module.exports = router;

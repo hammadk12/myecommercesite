@@ -93,8 +93,27 @@ exports.updateUser = async (req, res) => {
     }
 };
 
+// Logout user
 exports.logoutUser = (req, res) => {
     res.cookie('token', '', { httpOnly: true, maxAge: 0});
     res.json({ message: 'Logged out successfully' });
 };
 
+// Delete user/account
+exports.deleteUser = async (req, res) => {
+    try {
+        // Verify user deleting account is account owner
+        const userId = req.userData.id; 
+        const requestedDeleteUserId = req.params.userId;
+
+        if (userId !== requestedDeleteUserId) {
+            return res.status(403).json({ message: 'Unauthorized to delete this account' });
+        }
+
+        // Deletion
+        await User.findByIdAndDelete(userId);
+        res.json({ message: 'Account successfully deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
