@@ -66,4 +66,7 @@ router.put('/update', authMiddleware, registerValidation, userController.updateU
 // Register a new user
 router.post('/register', registerLimiter, registerValidation, userController.registerUser)
 
+// Logout user
+router.post('/logout', authMiddleware, userController.logoutUser);
+
 module.exports = router;

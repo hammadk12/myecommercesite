@@ -5,7 +5,7 @@ const validator = require('validator');
 
 // Helper function to generate JWT
 const generateToken = (userId) => {
-    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '60m' });
 };
 
 // Register User
@@ -39,7 +39,8 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = generateToken(user._id);
-        res.json({ token });
+        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // Set cookie for 1 hour
+        res.status(200).json({ message: "Login successful" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -90,5 +91,10 @@ exports.updateUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+exports.logoutUser = (req, res) => {
+    res.cookie('token', '', { httpOnly: true, maxAge: 0});
+    res.json({ message: 'Logged out successfully' });
 };
 
